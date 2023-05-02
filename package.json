@@ -4,7 +4,7 @@
   "description": "A utility for getting the license information from the dependencies in a Node.js project",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/TylerPop/license-grabber/issues"
   },
-  "homepage": "https://github.com/TylerPop/license-grabber#readme"
+  "homepage": "https://github.com/TylerPop/license-grabber#readme",
+  "devDependencies": {
+    "eslint": "^8.39.0"
+  }
 }

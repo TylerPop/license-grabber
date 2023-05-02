@@ -1,4 +1,4 @@
-import packageJsonData from "../test-project/package.json" assert { type: "json" };
+import packageJsonData from "../test-project/package.json";
 import path from "path";
 import fs from "fs";
 
@@ -11,7 +11,7 @@ packageNames.sort();
 const PROJECT_DIRECTORY = "./test-project";
 const NODE_MODULES = path.resolve(PROJECT_DIRECTORY, "node_modules");
 
-function getLicenseFiles(packageName) {
+function getLicenseFiles(packageName: string) {
   const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)/gi;
   const packagePath = path.join(NODE_MODULES, packageName);
   const files = fs.readdirSync(packagePath);

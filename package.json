@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "ts-node src/index.ts",
     "start": "node build/src/index.js",
-    "build": "rimraf build && tsc && npm --prefix ./build/test-project install",
+    "build": "rimraf build && tsc",
     "lint": "eslint"
   },
   "repository": {

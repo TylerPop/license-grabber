@@ -7,25 +7,26 @@ const NODE_MODULES = path.resolve(PROJECT_DIRECTORY, 'node_modules');
 const PACKAGE_JSON_BUFFER = fs.readFileSync(path.resolve(PROJECT_DIRECTORY, 'package.json'));
 const PACKAGE_JSON: PackageJson = JSON.parse(PACKAGE_JSON_BUFFER.toString());
 
-let dependencies: PackageData[] = [];
-let devDependencies: PackageData[] = [];
+function getDependencies(packageJson: PackageJson, includeDevDependencies = true): PackageData[] {
+  let dependencies: PackageData[] = [];
+  let devDependencies: PackageData[] = [];
 
-// Collect all dependencies
-if (PACKAGE_JSON?.dependencies) {
-  dependencies = Object.entries(PACKAGE_JSON.dependencies).map(([name, version]) => {
-    return { name, version: version.slice(1) };
-  });
+  if (packageJson?.dependencies) {
+    dependencies = Object.entries(PACKAGE_JSON.dependencies).map(([name, version]) => {
+      return { name, version: version.slice(1) };
+    });
+  }
+
+  if (includeDevDependencies && packageJson?.devDependencies) {
+    devDependencies = Object.entries(PACKAGE_JSON.devDependencies).map(([name, version]) => {
+      return { name, version: version.slice(1) };
+    });
+  }
+
+  return dependencies.concat(devDependencies);
 }
 
-if (PACKAGE_JSON?.devDependencies) {
-  devDependencies = Object.entries(PACKAGE_JSON.devDependencies).map(([name, version]) => {
-    return { name, version: version.slice(1) };
-  });
-}
-
-const packages = dependencies.concat(devDependencies);
-
-// Helper functions
+const packages = getDependencies(PACKAGE_JSON);
 
 function getLicensePath(packagePath: string): string | null {
   const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;

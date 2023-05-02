@@ -1,23 +1,27 @@
-import packageJsonData from '../test-project/package.json';
 import path from 'path';
 import fs from 'fs';
-import { LicenseInfo, PackageData } from './PackageData';
+import { LicenseInfo, PackageData, PackageJson } from './PackageData';
 
-const PROJECT_DIRECTORY = './test-project';
+const PROJECT_DIRECTORY = '.';
 const NODE_MODULES = path.resolve(PROJECT_DIRECTORY, 'node_modules');
+const PACKAGE_JSON_BUFFER = fs.readFileSync(path.resolve(PROJECT_DIRECTORY, 'package.json'));
+const PACKAGE_JSON: PackageJson = JSON.parse(PACKAGE_JSON_BUFFER.toString());
+
+let dependencies: PackageData[] = [];
+let devDependencies: PackageData[] = [];
 
 // Collect all dependencies
-const dependencies: PackageData[] = Object.entries(packageJsonData.dependencies).map(
-  ([name, version]) => {
+if (PACKAGE_JSON?.dependencies) {
+  dependencies = Object.entries(PACKAGE_JSON.dependencies).map(([name, version]) => {
     return { name, version: version.slice(1) };
-  }
-);
+  });
+}
 
-const devDependencies: PackageData[] = Object.entries(packageJsonData.devDependencies).map(
-  ([name, version]) => {
+if (PACKAGE_JSON?.devDependencies) {
+  devDependencies = Object.entries(PACKAGE_JSON.devDependencies).map(([name, version]) => {
     return { name, version: version.slice(1) };
-  }
-);
+  });
+}
 
 const packages = dependencies.concat(devDependencies);
 
@@ -57,4 +61,5 @@ function getAllPackagesData(basePath: string = NODE_MODULES): PackageData[] {
   });
 }
 
-console.log(getAllPackagesData());
+const allPackageData = getAllPackagesData();
+console.log(allPackageData, allPackageData.length);

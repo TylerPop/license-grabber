@@ -10,4 +10,10 @@ interface LicenseInfo {
   description: string;
 }
 
-export type { PackageData, LicenseInfo };
+interface PackageJson {
+  dependencies: Record<string, string>;
+  devDependencies: Record<string, string>;
+  license?: string;
+}
+
+export type { PackageData, LicenseInfo, PackageJson };

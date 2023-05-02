@@ -1,8 +1,8 @@
 interface PackageData {
   name: string;
   version: string;
-  archive: string;
   licenses: LicenseInfo[];
+  archive?: string;
 }
 
 interface LicenseInfo {

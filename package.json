@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "A utility for getting the license information from the dependencies in a Node.js project",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
+    "start": "node src/index.js",
     "lint": "eslint"
   },
   "repository": {
@@ -25,6 +27,8 @@
   },
   "homepage": "https://github.com/TylerPop/license-grabber#readme",
   "devDependencies": {
+    "@babel/eslint-parser": "^7.21.8",
+    "@babel/plugin-syntax-import-assertions": "^7.20.0",
     "eslint": "^8.39.0"
   }
 }

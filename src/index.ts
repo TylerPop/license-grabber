@@ -10,15 +10,16 @@ packageNames.sort();
 
 const PROJECT_DIRECTORY = './test-project';
 const NODE_MODULES = path.resolve(PROJECT_DIRECTORY, 'node_modules');
+// const packagePath = path.join(NODE_MODULES, packageName);
 
-function getLicenseFiles(packageName: string) {
-  const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)/gi;
-  const packagePath = path.join(NODE_MODULES, packageName);
+function getAllLicensePaths(packagePath: string): string[] {
+  const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;
   const files = fs.readdirSync(packagePath);
-
   const licenseFiles = files.filter((filename) => licenseRegex.test(filename));
 
-  return licenseFiles;
+  const licensePaths = licenseFiles.map((filename) => path.join(packagePath, filename));
+
+  return licensePaths;
 }
 
-console.log(getLicenseFiles('rimraf'));
+console.log(getAllLicensePaths(path.join(NODE_MODULES, 'rimraf')));

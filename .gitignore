@@ -131,3 +131,6 @@ dist
 
 # Test project folder
 test-project
+
+# TypeScript build output
+build

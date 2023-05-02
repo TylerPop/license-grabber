@@ -2,7 +2,7 @@
   "name": "license-grabber",
   "version": "1.0.0",
   "description": "A utility for getting the license information from the dependencies in a Node.js project",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

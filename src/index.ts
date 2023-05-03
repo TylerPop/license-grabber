@@ -1,6 +1,7 @@
 import path from 'path';
 import fs from 'fs';
-import { LicenseInfo, PackageData, PackageJson } from './PackageData';
+import * as LicenseUtils from './LicenseUtils';
+import { PackageData, PackageJson } from './PackageData';
 
 const PROJECT_DIRECTORY = '.';
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
@@ -30,36 +31,10 @@ function getDependencies(packageJson: PackageJson, includeDevDependencies = true
 
 const packages = getDependencies(PACKAGE_JSON);
 
-function getLicensePath(packagePath: string): string | null {
-  const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;
-  const files = fs.readdirSync(packagePath);
-  const licenseFile = files.filter((filename) => licenseRegex.test(filename));
-
-  if (licenseFile.length === 1) return path.join(packagePath, licenseFile[0]);
-  else return null;
-}
-
-function getLicenseInfo(packagePath: string): LicenseInfo | null {
-  const licensePath = getLicensePath(packagePath);
-
-  if (!licensePath) return null;
-
-  const licenseDescriptionBuffer = fs.readFileSync(licensePath);
-  const packageJsonBuffer = fs.readFileSync(path.join(packagePath, 'package.json'));
-  const packageJson = JSON.parse(packageJsonBuffer.toString());
-
-  const info = {
-    name: packageJson.license ?? 'Unknown',
-    description: licenseDescriptionBuffer.toString()
-  };
-
-  return info;
-}
-
 function getAllPackagesData(basePath: string): PackageData[] {
   return packages.map((packageData) => {
     const packagePath = path.join(basePath, packageData.name);
-    packageData.license = getLicenseInfo(packagePath);
+    packageData.license = LicenseUtils.getLicenseInfo(packagePath);
     return packageData;
   });
 }

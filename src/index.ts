@@ -3,7 +3,9 @@ import fs from 'fs';
 import { LicenseInfo, PackageData, PackageJson } from './PackageData';
 
 const PROJECT_DIRECTORY = '.';
-const NODE_MODULES = path.resolve(PROJECT_DIRECTORY, 'node_modules');
+const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
+const USE_NODE_MODULES = fs.existsSync(NODE_MODULES_PATH);
+
 const PACKAGE_JSON_BUFFER = fs.readFileSync(path.resolve(PROJECT_DIRECTORY, 'package.json'));
 const PACKAGE_JSON: PackageJson = JSON.parse(PACKAGE_JSON_BUFFER.toString());
 
@@ -54,7 +56,7 @@ function getLicenseInfo(packagePath: string): LicenseInfo | null {
   return info;
 }
 
-function getAllPackagesData(basePath: string = NODE_MODULES): PackageData[] {
+function getAllPackagesData(basePath: string): PackageData[] {
   return packages.map((packageData) => {
     const packagePath = path.join(basePath, packageData.name);
     packageData.license = getLicenseInfo(packagePath);
@@ -62,5 +64,7 @@ function getAllPackagesData(basePath: string = NODE_MODULES): PackageData[] {
   });
 }
 
-const allPackageData = getAllPackagesData();
-console.log(allPackageData, allPackageData.length);
+if (USE_NODE_MODULES) {
+  const allPackageData = getAllPackagesData(NODE_MODULES_PATH);
+  console.log(allPackageData, allPackageData.length);
+}

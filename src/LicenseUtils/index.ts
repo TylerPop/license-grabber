@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { LicenseInfo } from './PackageData';
+import { LicenseInfo } from '../PackageData';
 
 export function getLicensePath(packagePath: string): string | null {
   const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;

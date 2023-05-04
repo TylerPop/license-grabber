@@ -49,8 +49,9 @@ if (!fs.existsSync(PROJECT_DIRECTORY)) {
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
 const USE_NODE_MODULES = fs.existsSync(NODE_MODULES_PATH);
 
+// Main
 packages.forEach((packageData) => {
-  if (!USE_NODE_MODULES) {
+  if (USE_NODE_MODULES) {
     const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
     packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
     console.log(packageData);

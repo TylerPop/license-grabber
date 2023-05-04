@@ -23,7 +23,7 @@ export function getLicenseFromNodeModules(packagePath: string): LicenseInfo | nu
 
   const info = {
     name: packageJson.license ?? 'Unknown',
-    description: licenseDescriptionBuffer.toString()
+    description: licenseDescriptionBuffer.toString().trim()
   };
 
   return info;

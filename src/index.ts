@@ -3,7 +3,10 @@ import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
 
-function getDependencies(packageJson: PackageJson, includeDevDependencies = true): PackageData[] {
+function collectDependencies(
+  packageJson: PackageJson,
+  includeDevDependencies = true
+): PackageData[] {
   let dependencies: PackageData[] = [];
   let devDependencies: PackageData[] = [];
 
@@ -38,7 +41,7 @@ function parsePackageJson(): PackageJson {
 const PROJECT_DIRECTORY = '.';
 const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
 const PACKAGE_JSON = parsePackageJson();
-const packages = getDependencies(PACKAGE_JSON);
+const packages = collectDependencies(PACKAGE_JSON);
 
 // Stop process if selected project directory does not exist
 if (!fs.existsSync(PROJECT_DIRECTORY)) {

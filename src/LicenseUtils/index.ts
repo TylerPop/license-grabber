@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
-import { LicenseInfo } from '../PackageData';
+import axios from 'axios';
+import { LicenseInfo, PackageData } from '../PackageData';
 
 export function getLicensePath(packagePath: string): string | null {
   const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;
@@ -26,4 +27,29 @@ export function getLicenseInfo(packagePath: string): LicenseInfo | null {
   };
 
   return info;
+}
+
+export async function getLicenseFromRegistry(packageData: PackageData) {
+  return axios
+    .get(packageData.archive)
+    .then((response) => {
+      if (response.data?.license) {
+        try {
+          const packageLicense = response.data.versions[packageData.version].license;
+          const packageUrl = response.data.repository?.url.replace('git+', '');
+
+          packageData.license = { name: packageLicense, description: '' };
+          packageData.url = packageUrl;
+        } catch (e) {
+          console.log(
+            `Could not find license from registry for ${packageData.name} ${packageData.version}`
+          );
+        }
+      }
+      return packageData;
+    })
+    .catch((error) => {
+      console.error(error);
+      return packageData;
+    });
 }

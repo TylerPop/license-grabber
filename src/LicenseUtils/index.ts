@@ -53,3 +53,16 @@ export async function getLicenseFromRegistry(packageData: PackageData) {
       return packageData;
     });
 }
+
+export async function getLicenseDescription(licenseName: string): Promise<string> {
+  const licenseDescriptionUrl = `https://raw.githubusercontent.com/spdx/license-list-data/master/text/${licenseName}.txt`;
+
+  return axios
+    .get(licenseDescriptionUrl)
+    .then((response) => response.data)
+    .catch((error) => {
+      console.error(`Error: Unable to retrieve license description for ${licenseName}.`);
+      console.error(error);
+      return '';
+    });
+}

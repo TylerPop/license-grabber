@@ -36,10 +36,12 @@ export async function getLicenseFromRegistry(packageData: PackageData) {
       if (response.data?.license) {
         try {
           const packageLicense = response.data.versions[packageData.version].license;
-          const packageUrl = response.data.repository?.url.replace('git+', '');
-
           packageData.license = { name: packageLicense, description: '' };
-          packageData.url = packageUrl;
+
+          const repositoryUrl = response.data.repository?.url;
+          if (repositoryUrl) {
+            packageData.url = repositoryUrl.replace('git+', '');
+          }
         } catch (e) {
           console.log(
             `Could not find license from registry for ${packageData.name} ${packageData.version}`
@@ -62,6 +64,24 @@ export async function getLicenseDescription(licenseName: string): Promise<string
     .then((response) => response.data)
     .catch((error) => {
       console.error(`Error: Unable to retrieve license description for ${licenseName}.`);
+      console.error(error);
+      return '';
+    });
+}
+
+export async function getRepositoryURL(packageData: PackageData): Promise<string> {
+  return axios
+    .get(packageData.archive)
+    .then((response) => {
+      if (response.data.repository?.url) {
+        return response.data.repository.url.replace('git+', '');
+      }
+
+      console.error(
+        `Error: Unable to retrieve repository URL for ${packageData.name} ${packageData.version}.`
+      );
+    })
+    .catch((error) => {
       console.error(error);
       return '';
     });

@@ -63,9 +63,14 @@ packages.forEach(async (packageData) => {
   // Populate any missing license descriptions using SPDX repository
   // https://github.com/spdx/license-list-data/tree/main/text
   if (packageData.license?.name && !packageData.license?.description) {
-    await LicenseUtils.getLicenseDescription(packageData.license.name).then((data) => {
-      if (packageData?.license) packageData.license.description = data;
+    await LicenseUtils.getLicenseDescription(packageData.license.name).then((desc) => {
+      if (packageData?.license) packageData.license.description = desc;
     });
+  }
+
+  // Populate any missing package repository URLs
+  if (!packageData?.url) {
+    await LicenseUtils.getRepositoryURL(packageData).then((url) => (packageData.url = url));
   }
 
   console.log(packageData);

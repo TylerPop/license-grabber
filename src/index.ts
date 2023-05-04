@@ -9,13 +9,15 @@ function getDependencies(packageJson: PackageJson, includeDevDependencies = true
 
   if (packageJson?.dependencies) {
     dependencies = Object.entries(PACKAGE_JSON.dependencies).map(([name, version]) => {
-      return { name, version: version.slice(1) };
+      const archiveUrl = new URL(`${name}/-/${name}-${version.slice(1)}.tgz`, REGISTRY_PREFIX).href;
+      return { name, version: version.slice(1), archive: archiveUrl };
     });
   }
 
   if (includeDevDependencies && packageJson?.devDependencies) {
     devDependencies = Object.entries(PACKAGE_JSON.devDependencies).map(([name, version]) => {
-      return { name, version: version.slice(1) };
+      const archiveUrl = new URL(`${name}/-/${name}-${version.slice(1)}.tgz`, REGISTRY_PREFIX).href;
+      return { name, version: version.slice(1), archive: archiveUrl };
     });
   }
 
@@ -32,6 +34,7 @@ function getAllPackagesData(basePath: string): PackageData[] {
 }
 
 const PROJECT_DIRECTORY = '.';
+const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
 let PACKAGE_JSON_BUFFER: Buffer;
 let PACKAGE_JSON: PackageJson;
 

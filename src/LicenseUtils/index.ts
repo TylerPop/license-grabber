@@ -12,7 +12,7 @@ export function getLicensePath(packagePath: string): string | null {
   else return null;
 }
 
-export function getLicenseInfo(packagePath: string): LicenseInfo | null {
+export function getLicenseFromNodeModules(packagePath: string): LicenseInfo | null {
   const licensePath = getLicensePath(packagePath);
 
   if (!licensePath) return null;

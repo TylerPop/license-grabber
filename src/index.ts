@@ -47,15 +47,18 @@ if (!fs.existsSync(PROJECT_DIRECTORY)) {
 }
 
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
-const USE_NODE_MODULES = fs.existsSync(NODE_MODULES_PATH);
 
 // Main
-packages.forEach((packageData) => {
-  if (USE_NODE_MODULES) {
-    const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
-    packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
-    console.log(packageData);
-  } else {
-    LicenseUtils.getLicenseFromRegistry(packageData).then((data) => console.log(data));
+
+packages.forEach(async (packageData) => {
+  // Check node_modules first
+  const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
+  packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
+
+  // Check registry if license is not found in node_modules
+  if (!packageData.license) {
+    await LicenseUtils.getLicenseFromRegistry(packageData).then((data) => (packageData = data));
   }
+
+  console.log(packageData);
 });

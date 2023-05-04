@@ -60,4 +60,8 @@ const USE_NODE_MODULES = fs.existsSync(NODE_MODULES_PATH);
 if (USE_NODE_MODULES) {
   const allPackageData = getAllPackagesData(NODE_MODULES_PATH);
   console.log(allPackageData, allPackageData.length);
+} else {
+  packages.forEach((packageData) => {
+    LicenseUtils.getLicenseFromRegistry(packageData).then((data) => console.log(data));
+  });
 }

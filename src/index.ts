@@ -25,7 +25,6 @@ function getDependencies(packageJson: PackageJson, includeDevDependencies = true
 }
 
 function getAllPackagesData(basePath: string): PackageData[] {
-  const packages = getDependencies(PACKAGE_JSON);
   return packages.map((packageData) => {
     const packagePath = path.join(basePath, packageData.name);
     packageData.license = LicenseUtils.getLicenseInfo(packagePath);
@@ -33,22 +32,26 @@ function getAllPackagesData(basePath: string): PackageData[] {
   });
 }
 
+function parsePackageJson(): PackageJson {
+  try {
+    const packageJsonBuffer = fs.readFileSync(path.resolve(PROJECT_DIRECTORY, 'package.json'));
+    const packageJson = JSON.parse(packageJsonBuffer.toString());
+    return packageJson;
+  } catch (e) {
+    console.error(`Error: Unable to locate package.json in ${PROJECT_DIRECTORY}`);
+    process.exit(1);
+  }
+}
+
 const PROJECT_DIRECTORY = '.';
 const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
-let PACKAGE_JSON_BUFFER: Buffer;
-let PACKAGE_JSON: PackageJson;
+const PACKAGE_JSON = parsePackageJson();
+const packages = getDependencies(PACKAGE_JSON);
 
 // Stop process if selected project directory does not exist
 if (!fs.existsSync(PROJECT_DIRECTORY)) {
   console.error(`Error: ${PROJECT_DIRECTORY} does not exist.`);
   process.exit(9); // Invalid Argument exit code
-}
-
-try {
-  PACKAGE_JSON_BUFFER = fs.readFileSync(path.resolve(PROJECT_DIRECTORY, 'package.json'));
-  PACKAGE_JSON = JSON.parse(PACKAGE_JSON_BUFFER.toString());
-} catch (e) {
-  console.error(`Error: Unable to locate package.json in ${PROJECT_DIRECTORY}`);
 }
 
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');

@@ -16,5 +16,10 @@ export default function saveAsJSON(allPackageData: PackageData[], outputPath: st
     data[name] = otherData;
   });
 
-  fs.writeFileSync(outputPath, JSON.stringify(data));
+  try {
+    fs.writeFileSync(outputPath, JSON.stringify(data));
+  } catch (e) {
+    console.error(`Error: There was a problem writing to file ${outputPath}`);
+    console.error(e);
+  }
 }

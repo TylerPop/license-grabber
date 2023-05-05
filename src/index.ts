@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
-import { saveAsJSON } from './serialization';
+import { saveAsJSON } from './serialization/json';
 import isValidPath from 'is-valid-path';
 
 function collectDependencies(

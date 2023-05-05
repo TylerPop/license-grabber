@@ -20,7 +20,7 @@ export function getHTMLBody(packageName: string, url: string, licenseDescription
   const bodyTemplate = `
     <div>
         <a href="${url}">${packageName}</a>
-        <p>${licenseDescription.replace('\n', '<br><br>')}</p>
+        <p>${licenseDescription.replaceAll('\n\n', '<br><br>')}</p>
     </div>
     `;
 

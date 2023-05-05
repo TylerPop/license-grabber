@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
-import { saveAsJSON } from './serialization/json';
+import saveAsTxt from './serialization/txt';
 import isValidPath from 'is-valid-path';
 
 function collectDependencies(
@@ -84,10 +84,10 @@ const processedPackageData = packages.map(async (packageData) => {
   return packageData;
 });
 
-const outputPath = path.join('.', 'output.json');
+const outputPath = path.join('.', 'output');
 if (!isValidPath(outputPath)) {
   console.error(`Error: The output ${outputPath} is not a valid path.`);
   process.exit(9);
 }
 
-Promise.all(processedPackageData).then((data) => saveAsJSON(data, outputPath));
+Promise.all(processedPackageData).then((data) => saveAsTxt(data, outputPath));

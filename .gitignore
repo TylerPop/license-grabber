@@ -130,6 +130,7 @@ dist
 .pnp.*
 
 # Output file produced by package
+output
 output.*
 
 # TypeScript build output

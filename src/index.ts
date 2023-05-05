@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
+import { saveAsJSON } from './serialization';
 
 function collectDependencies(
   packageJson: PackageJson,
@@ -53,7 +54,7 @@ const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
 
 // Main
 
-packages.forEach(async (packageData) => {
+const processedPackageData = packages.map(async (packageData) => {
   // Check node_modules first
   const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
   packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
@@ -76,5 +77,7 @@ packages.forEach(async (packageData) => {
     await LicenseUtils.getRepositoryURL(packageData).then((url) => (packageData.url = url));
   }
 
-  console.log(packageData);
+  return packageData;
 });
+
+Promise.all(processedPackageData).then((data) => saveAsJSON(data));

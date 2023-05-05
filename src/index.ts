@@ -3,7 +3,7 @@ import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
 import isValidPath from 'is-valid-path';
-import saveAsMarkdown from './serialization/markdown';
+import saveAsHTML from './serialization/html';
 
 function collectDependencies(
   packageJson: PackageJson,
@@ -84,13 +84,13 @@ const processedPackageData = packages.map(async (packageData) => {
   return packageData;
 });
 
-const outputPath = path.join('.', 'output.md');
+const outputPath = path.join('.', 'output.html');
 if (!isValidPath(outputPath)) {
   console.error(`Error: The output ${outputPath} is not a valid path.`);
   process.exit(9);
 }
 
 Promise.all(processedPackageData).then((data) => {
-  saveAsMarkdown(data, outputPath);
-  console.log('Completed successfully.');
+  saveAsHTML(data, outputPath);
+  console.log('Complete.');
 });

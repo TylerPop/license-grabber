@@ -129,8 +129,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-# Test project folder
-test-project
+# Output file produced by package
+output.*
 
 # TypeScript build output
 build

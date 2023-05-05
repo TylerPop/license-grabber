@@ -1,5 +1,4 @@
 import fs from 'fs';
-import path from 'path';
 import { LicenseInfo, PackageData } from '../PackageData';
 
 interface JsonData {
@@ -9,7 +8,7 @@ interface JsonData {
   license?: LicenseInfo | null;
 }
 
-export function saveAsJSON(allPackageData: PackageData[]) {
+export function saveAsJSON(allPackageData: PackageData[], outputPath: string) {
   const data: Record<string, JsonData> = {};
 
   allPackageData.forEach((packageData) => {
@@ -17,5 +16,5 @@ export function saveAsJSON(allPackageData: PackageData[]) {
     data[name] = otherData;
   });
 
-  fs.writeFileSync(path.join('.', 'output.json'), JSON.stringify(data));
+  fs.writeFileSync(outputPath, JSON.stringify(data));
 }

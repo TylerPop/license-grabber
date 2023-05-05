@@ -3,6 +3,7 @@ import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
 import { saveAsJSON } from './serialization';
+import isValidPath from 'is-valid-path';
 
 function collectDependencies(
   packageJson: PackageJson,
@@ -44,10 +45,13 @@ const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
 const PACKAGE_JSON = parsePackageJson();
 const packages = collectDependencies(PACKAGE_JSON);
 
-// Stop process if selected project directory does not exist
+// Stop process if selected project directory does not exist or is invalid
 if (!fs.existsSync(PROJECT_DIRECTORY)) {
   console.error(`Error: ${PROJECT_DIRECTORY} does not exist.`);
   process.exit(9); // Invalid Argument exit code
+} else if (!isValidPath(PROJECT_DIRECTORY)) {
+  console.error(`Error: ${PROJECT_DIRECTORY} is not a valid path.`);
+  process.exit(9);
 }
 
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
@@ -80,4 +84,10 @@ const processedPackageData = packages.map(async (packageData) => {
   return packageData;
 });
 
-Promise.all(processedPackageData).then((data) => saveAsJSON(data));
+const outputPath = path.join('.', 'output.json');
+if (!isValidPath(outputPath)) {
+  console.error(`Error: The output ${outputPath} is not a valid path.`);
+  process.exit(9);
+}
+
+Promise.all(processedPackageData).then((data) => saveAsJSON(data, outputPath));

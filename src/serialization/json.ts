@@ -8,7 +8,7 @@ interface JsonData {
   license?: LicenseInfo | null;
 }
 
-export function saveAsJSON(allPackageData: PackageData[], outputPath: string) {
+export default function saveAsJSON(allPackageData: PackageData[], outputPath: string) {
   const data: Record<string, JsonData> = {};
 
   allPackageData.forEach((packageData) => {

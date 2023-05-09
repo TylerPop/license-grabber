@@ -2,6 +2,8 @@ import path from 'path';
 import fs from 'fs';
 import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
+import isValidPath from 'is-valid-path';
+import saveAsHTML from './serialization/html';
 
 function collectDependencies(
   packageJson: PackageJson,
@@ -43,17 +45,20 @@ const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
 const PACKAGE_JSON = parsePackageJson();
 const packages = collectDependencies(PACKAGE_JSON);
 
-// Stop process if selected project directory does not exist
+// Stop process if selected project directory does not exist or is invalid
 if (!fs.existsSync(PROJECT_DIRECTORY)) {
   console.error(`Error: ${PROJECT_DIRECTORY} does not exist.`);
   process.exit(9); // Invalid Argument exit code
+} else if (!isValidPath(PROJECT_DIRECTORY)) {
+  console.error(`Error: ${PROJECT_DIRECTORY} is not a valid path.`);
+  process.exit(9);
 }
 
 const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
 
 // Main
 
-packages.forEach(async (packageData) => {
+const processedPackageData = packages.map(async (packageData) => {
   // Check node_modules first
   const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
   packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
@@ -76,5 +81,16 @@ packages.forEach(async (packageData) => {
     await LicenseUtils.getRepositoryURL(packageData).then((url) => (packageData.url = url));
   }
 
-  console.log(packageData);
+  return packageData;
+});
+
+const outputPath = path.join('.', 'output.html');
+if (!isValidPath(outputPath)) {
+  console.error(`Error: The output ${outputPath} is not a valid path.`);
+  process.exit(9);
+}
+
+Promise.all(processedPackageData).then((data) => {
+  saveAsHTML(data, outputPath);
+  console.log('Complete.');
 });

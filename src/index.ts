@@ -4,6 +4,7 @@ import * as LicenseUtils from './LicenseUtils';
 import { PackageData, PackageJson } from './PackageData';
 import isValidPath from 'is-valid-path';
 import saveAsHTML from './serialization/html';
+import yargs from 'yargs';
 
 function collectDependencies(
   packageJson: PackageJson,
@@ -90,7 +91,19 @@ if (!isValidPath(outputPath)) {
   process.exit(9);
 }
 
-Promise.all(processedPackageData).then((data) => {
-  saveAsHTML(data, outputPath);
-  console.log('Complete.');
-});
+// Promise.all(processedPackageData).then((data) => {
+//   saveAsHTML(data, outputPath);
+//   console.log('Complete.');
+// });
+
+yargs
+  .scriptName('license-grabber')
+  .usage('$0 [folder] <options>')
+  .command('$0 [folder]', '', (yargs) => {
+    yargs.positional('folder', {
+      type: 'string',
+      default: '.',
+      describe: 'The root directory of the Node.js project.'
+    });
+  })
+  .help().argv;

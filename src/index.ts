@@ -56,9 +56,10 @@ function checkProjectDirectoryExists(projectDirectory: string) {
 interface LicenseGrabberOptions {
   projectDirectory: string;
   outputPath: string;
+  filename: string;
 }
 
-function main({ projectDirectory, outputPath }: LicenseGrabberOptions) {
+function main({ projectDirectory, outputPath, filename }: LicenseGrabberOptions) {
   checkProjectDirectoryExists(projectDirectory);
 
   const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
@@ -92,7 +93,7 @@ function main({ projectDirectory, outputPath }: LicenseGrabberOptions) {
     return packageData;
   });
 
-  outputPath = path.join(outputPath, 'license_info' + '.html');
+  outputPath = path.join(outputPath, filename + '.html');
   if (!isValidPath(outputPath)) {
     console.error(`Error: The output ${outputPath} is not a valid path.`);
     process.exit(9);
@@ -119,8 +120,17 @@ yargs
         describe: 'The directory where the output file(s) will be created.',
         type: 'string'
       })
+      .option('filename', {
+        default: 'license_info',
+        describe: 'The name of the output file/directory created.',
+        type: 'string'
+      })
       .parseSync();
 
-    main({ projectDirectory: argv.directory, outputPath: argv.outputPath });
+    main({
+      projectDirectory: argv.directory,
+      outputPath: argv.outputPath,
+      filename: argv.filename
+    });
   })
   .help().argv;

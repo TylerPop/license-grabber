@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { LicenseInfo, PackageData } from '../PackageData';
+import { LicenseInfo, PackageData } from '../types';
 
 interface JsonData {
   version: string;

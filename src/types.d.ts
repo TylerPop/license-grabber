@@ -17,4 +17,15 @@ interface PackageJson {
   license?: string;
 }
 
-export type { PackageData, LicenseInfo, PackageJson };
+interface LicenseGrabberOptions {
+  projectDirectory: string;
+  type: string;
+  outputPath: string;
+  filename: string;
+  excludeProd: boolean;
+  excludeDev: boolean;
+  skipNodeModules: boolean;
+  skipRegistry: boolean;
+}
+
+export type { PackageData, LicenseInfo, PackageJson, LicenseGrabberOptions };

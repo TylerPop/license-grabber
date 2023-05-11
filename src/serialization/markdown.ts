@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { PackageData } from '../PackageData';
+import { PackageData } from '../types';
 
 export default function saveAsMarkdown(allPackageData: PackageData[], outputPath: string) {
   let markdownText = '';

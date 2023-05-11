@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
 import isValidPath from 'is-valid-path';
-import { LicenseInfo, PackageData, PackageJson } from '../PackageData';
+import { LicenseInfo, PackageData, PackageJson } from '../types';
 
 export function parsePackageJson(projectDirectory: string): PackageJson {
   try {

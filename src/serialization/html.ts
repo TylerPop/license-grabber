@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { PackageData } from '../PackageData';
+import { PackageData } from '../types';
 import fillTemplateHTML, { getHTMLBody } from './html-template';
 
 export default function saveAsHTML(allPackageData: PackageData[], outputPath: string) {

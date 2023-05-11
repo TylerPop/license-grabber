@@ -3,17 +3,7 @@ import yargs from 'yargs';
 import * as Utils from './utils';
 import isValidPath from 'is-valid-path';
 import saveAs from './serialization';
-
-interface LicenseGrabberOptions {
-  projectDirectory: string;
-  type: string;
-  outputPath: string;
-  filename: string;
-  excludeProd: boolean;
-  excludeDev: boolean;
-  skipNodeModules: boolean;
-  skipRegistry: boolean;
-}
+import { LicenseGrabberOptions } from './types';
 
 function main({
   projectDirectory,
@@ -75,6 +65,7 @@ function main({
   });
 }
 
+// Command line functionality
 yargs
   .scriptName('license-grabber')
   .usage('$0 [directory] <options>')

@@ -2,7 +2,7 @@ import saveAsJSON from './json';
 import saveAsTxt from './txt';
 import saveAsMarkdown from './markdown';
 import saveAsHTML from './html';
-import { PackageData } from '../PackageData';
+import { PackageData } from '../types';
 
 export default function saveAs(type: string, allPackageData: PackageData[], outputPath: string) {
   switch (type) {

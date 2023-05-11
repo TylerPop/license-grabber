@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { PackageData } from '../PackageData';
+import { PackageData } from '../types';
 
 export default function saveAsTxt(allPackageData: PackageData[], outputDir: string) {
   // Create output directory if it doesn't already exist

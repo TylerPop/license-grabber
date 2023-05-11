@@ -1,11 +1,12 @@
 import path from 'path';
+import yargs from 'yargs';
 import * as Utils from './utils';
 import isValidPath from 'is-valid-path';
-import saveAsHTML from './serialization/html';
-import yargs from 'yargs';
+import saveAs from './serialization';
 
 interface LicenseGrabberOptions {
   projectDirectory: string;
+  type: string;
   outputPath: string;
   filename: string;
   excludeProd: boolean;
@@ -16,6 +17,7 @@ interface LicenseGrabberOptions {
 
 function main({
   projectDirectory,
+  type,
   outputPath,
   filename,
   excludeProd,
@@ -61,14 +63,14 @@ function main({
     return packageData;
   });
 
-  outputPath = path.join(outputPath, filename + '.html');
+  outputPath = path.join(outputPath, filename);
   if (!isValidPath(outputPath)) {
     console.error(`Error: The output ${outputPath} is not a valid path.`);
     process.exit(9);
   }
 
   Promise.all(processedPackageData).then((data) => {
-    saveAsHTML(data, outputPath);
+    saveAs(type, data, outputPath);
     console.info('Complete.');
   });
 }
@@ -82,6 +84,12 @@ yargs
         default: '.',
         describe: 'The root directory of the Node.js project.',
         type: 'string'
+      })
+      .option('type', {
+        default: 'json',
+        describe: 'The type of output file that is generated.',
+        type: 'string',
+        choices: ['json', 'txt', 'markdown', 'html']
       })
       .option('output-path', {
         default: '.',
@@ -117,14 +125,17 @@ yargs
       })
       .parseSync();
 
-    main({
+    const options = {
       projectDirectory: argv.directory,
+      type: argv.type,
       outputPath: argv.outputPath,
       filename: argv.filename,
       excludeProd: argv.excludeProd,
       excludeDev: argv.excludeDev,
       skipNodeModules: argv.skipNodeModules,
       skipRegistry: argv.skipRegistry
-    });
+    };
+
+    main(options);
   })
   .help().argv;

@@ -1,7 +1,55 @@
 import fs from 'fs';
 import path from 'path';
 import axios from 'axios';
-import { LicenseInfo, PackageData } from '../PackageData';
+import isValidPath from 'is-valid-path';
+import { LicenseInfo, PackageData, PackageJson } from '../PackageData';
+
+export function parsePackageJson(projectDirectory: string): PackageJson {
+  try {
+    const packageJsonBuffer = fs.readFileSync(path.resolve(projectDirectory, 'package.json'));
+    const packageJson = JSON.parse(packageJsonBuffer.toString());
+    return packageJson;
+  } catch (e) {
+    console.error(`Error: Unable to locate package.json in ${projectDirectory}`);
+    process.exit(1);
+  }
+}
+
+export function checkProjectDirectoryExists(projectDirectory: string) {
+  if (!fs.existsSync(projectDirectory)) {
+    console.error(`Error: ${projectDirectory} does not exist.`);
+    process.exit(9); // Invalid Argument exit code
+  } else if (!isValidPath(projectDirectory)) {
+    console.error(`Error: ${projectDirectory} is not a valid path.`);
+    process.exit(9);
+  }
+}
+
+export function collectDependencies(
+  packageJson: PackageJson,
+  registryPrefix: string,
+  excludeProd: boolean,
+  excludeDev: boolean
+): PackageData[] {
+  let dependencies: PackageData[] = [];
+  let devDependencies: PackageData[] = [];
+
+  if (!excludeProd && packageJson?.dependencies) {
+    dependencies = Object.entries(packageJson.dependencies).map(([name, version]) => {
+      const archiveUrl = new URL(`${name}`, registryPrefix).href;
+      return { name, version: version.slice(1), archive: archiveUrl };
+    });
+  }
+
+  if (!excludeDev && packageJson?.devDependencies) {
+    devDependencies = Object.entries(packageJson.devDependencies).map(([name, version]) => {
+      const archiveUrl = new URL(`${name}`, registryPrefix).href;
+      return { name, version: version.slice(1), archive: archiveUrl };
+    });
+  }
+
+  return dependencies.concat(devDependencies);
+}
 
 export function getLicensePath(packagePath: string): string | null {
   const licenseRegex = /(LICENSE|LICENCE|COPYING|COPYRIGHT)\.?.*/i;

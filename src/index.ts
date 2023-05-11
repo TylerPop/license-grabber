@@ -53,15 +53,17 @@ function checkProjectDirectoryExists(projectDirectory: string) {
 }
 
 // Main
+interface LicenseGrabberOptions {
+  projectDirectory: string;
+}
 
-function main() {
-  const PROJECT_DIRECTORY = '.';
-  checkProjectDirectoryExists(PROJECT_DIRECTORY);
+function main({ projectDirectory }: LicenseGrabberOptions) {
+  checkProjectDirectoryExists(projectDirectory);
 
   const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
-  const PACKAGE_JSON = parsePackageJson(PROJECT_DIRECTORY);
+  const PACKAGE_JSON = parsePackageJson(projectDirectory);
   const packages = collectDependencies(PACKAGE_JSON, REGISTRY_PREFIX);
-  const NODE_MODULES_PATH = path.resolve(PROJECT_DIRECTORY, 'node_modules');
+  const NODE_MODULES_PATH = path.resolve(projectDirectory, 'node_modules');
 
   const processedPackageData = packages.map(async (packageData) => {
     // Check node_modules first
@@ -101,16 +103,18 @@ function main() {
   });
 }
 
-main();
-
 yargs
   .scriptName('license-grabber')
-  .usage('$0 [folder] <options>')
-  .command('$0 [folder]', '', (yargs) => {
-    yargs.positional('folder', {
-      type: 'string',
-      default: '.',
-      describe: 'The root directory of the Node.js project.'
-    });
+  .usage('$0 [directory] <options>')
+  .command('$0 [directory]', '', (yargs) => {
+    const argv = yargs
+      .positional('directory', {
+        default: '.',
+        describe: 'The root directory of the Node.js project.',
+        type: 'string'
+      })
+      .parseSync();
+
+    main({ projectDirectory: argv.directory });
   })
   .help().argv;

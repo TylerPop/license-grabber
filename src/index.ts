@@ -55,9 +55,10 @@ function checkProjectDirectoryExists(projectDirectory: string) {
 // Main
 interface LicenseGrabberOptions {
   projectDirectory: string;
+  outputPath: string;
 }
 
-function main({ projectDirectory }: LicenseGrabberOptions) {
+function main({ projectDirectory, outputPath }: LicenseGrabberOptions) {
   checkProjectDirectoryExists(projectDirectory);
 
   const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
@@ -91,7 +92,7 @@ function main({ projectDirectory }: LicenseGrabberOptions) {
     return packageData;
   });
 
-  const outputPath = path.join('.', 'output.html');
+  outputPath = path.join(outputPath, 'license_info' + '.html');
   if (!isValidPath(outputPath)) {
     console.error(`Error: The output ${outputPath} is not a valid path.`);
     process.exit(9);
@@ -113,8 +114,13 @@ yargs
         describe: 'The root directory of the Node.js project.',
         type: 'string'
       })
+      .option('output-path', {
+        default: '.',
+        describe: 'The directory where the output file(s) will be created.',
+        type: 'string'
+      })
       .parseSync();
 
-    main({ projectDirectory: argv.directory });
+    main({ projectDirectory: argv.directory, outputPath: argv.outputPath });
   })
   .help().argv;

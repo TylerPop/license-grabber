@@ -2,11 +2,20 @@
   "name": "license-grabber",
   "version": "1.0.0",
   "description": "A utility for getting the license information from the dependencies in a Node.js project",
-  "main": "src/index.ts",
+  "bin": {
+    "license-grabber": "./build/license-grabber"
+  },
+  "files": [
+    "build"
+  ],
   "scripts": {
     "dev": "ts-node src/index.ts",
     "start": "node build/src/index.js",
-    "build": "rimraf build && tsc",
+    "build:local": "rimraf build && tsc && @powershell copy -r lib/license-grabber build",
+    "build:ci": "rimraf build && tsc && cp -r lib/license-grabber build",
+    "test-package:prep": "npm run build:local && rimraf test && mkdir test && npm uninstall -g license-grabber",
+    "test-package:copy": "@powershell copy -r build test/build && @powershell copy package.json test/package.json",
+    "test-package": "npm run test-package:prep && npm run test-package:copy && npm i -g ./test",
     "lint": "eslint"
   },
   "repository": {
@@ -31,6 +40,7 @@
     "@types/is-valid-path": "^0.1.0",
     "@types/json-schema": "^7.0.11",
     "@types/node": "^18.16.3",
+    "@types/yargs": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.59.2",
     "@typescript-eslint/parser": "^5.59.2",
     "eslint": "^8.39.0",
@@ -41,6 +51,7 @@
   },
   "dependencies": {
     "axios": "^1.4.0",
-    "is-valid-path": "^0.1.1"
+    "is-valid-path": "^0.1.1",
+    "yargs": "^17.7.2"
   }
 }

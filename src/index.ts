@@ -60,6 +60,8 @@ interface LicenseGrabberOptions {
   filename: string;
   excludeProd: boolean;
   excludeDev: boolean;
+  skipNodeModules: boolean;
+  skipRegistry: boolean;
 }
 
 function main({
@@ -67,7 +69,9 @@ function main({
   outputPath,
   filename,
   excludeProd,
-  excludeDev
+  excludeDev,
+  skipNodeModules,
+  skipRegistry
 }: LicenseGrabberOptions) {
   checkProjectDirectoryExists(projectDirectory);
 
@@ -79,10 +83,10 @@ function main({
   const processedPackageData = packages.map(async (packageData) => {
     // Check node_modules first
     const packagePath = path.join(NODE_MODULES_PATH, packageData.name);
-    packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
+    if (!skipNodeModules) packageData.license = LicenseUtils.getLicenseFromNodeModules(packagePath);
 
     // Check registry if license is not found in node_modules
-    if (!packageData.license) {
+    if (!packageData.license && !skipRegistry) {
       await LicenseUtils.getLicenseFromRegistry(packageData).then((data) => (packageData = data));
     }
 
@@ -146,6 +150,16 @@ yargs
           'License information from development dependencies will be excluded from the output.',
         type: 'boolean'
       })
+      .option('skip-node-modules', {
+        default: false,
+        describe: 'Skips checking node_modules folder for license information.',
+        type: 'boolean'
+      })
+      .option('skip-registry', {
+        default: false,
+        describe: 'Skips checking the NPM registry for license information.',
+        type: 'boolean'
+      })
       .parseSync();
 
     main({
@@ -153,7 +167,9 @@ yargs
       outputPath: argv.outputPath,
       filename: argv.filename,
       excludeProd: argv.excludeProd,
-      excludeDev: argv.excludeDev
+      excludeDev: argv.excludeDev,
+      skipNodeModules: argv.skipNodeModules,
+      skipRegistry: argv.skipRegistry
     });
   })
   .help().argv;

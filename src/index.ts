@@ -9,19 +9,20 @@ import yargs from 'yargs';
 function collectDependencies(
   packageJson: PackageJson,
   registryPrefix: string,
-  includeDevDependencies = true
+  excludeProd: boolean,
+  excludeDev: boolean
 ): PackageData[] {
   let dependencies: PackageData[] = [];
   let devDependencies: PackageData[] = [];
 
-  if (packageJson?.dependencies) {
+  if (!excludeProd && packageJson?.dependencies) {
     dependencies = Object.entries(packageJson.dependencies).map(([name, version]) => {
       const archiveUrl = new URL(`${name}`, registryPrefix).href;
       return { name, version: version.slice(1), archive: archiveUrl };
     });
   }
 
-  if (includeDevDependencies && packageJson?.devDependencies) {
+  if (!excludeDev && packageJson?.devDependencies) {
     devDependencies = Object.entries(packageJson.devDependencies).map(([name, version]) => {
       const archiveUrl = new URL(`${name}`, registryPrefix).href;
       return { name, version: version.slice(1), archive: archiveUrl };
@@ -57,14 +58,22 @@ interface LicenseGrabberOptions {
   projectDirectory: string;
   outputPath: string;
   filename: string;
+  excludeProd: boolean;
+  excludeDev: boolean;
 }
 
-function main({ projectDirectory, outputPath, filename }: LicenseGrabberOptions) {
+function main({
+  projectDirectory,
+  outputPath,
+  filename,
+  excludeProd,
+  excludeDev
+}: LicenseGrabberOptions) {
   checkProjectDirectoryExists(projectDirectory);
 
   const REGISTRY_PREFIX = 'https://registry.npmjs.org/';
   const PACKAGE_JSON = parsePackageJson(projectDirectory);
-  const packages = collectDependencies(PACKAGE_JSON, REGISTRY_PREFIX);
+  const packages = collectDependencies(PACKAGE_JSON, REGISTRY_PREFIX, excludeProd, excludeDev);
   const NODE_MODULES_PATH = path.resolve(projectDirectory, 'node_modules');
 
   const processedPackageData = packages.map(async (packageData) => {
@@ -125,12 +134,26 @@ yargs
         describe: 'The name of the output file/directory created.',
         type: 'string'
       })
+      .option('exclude-prod', {
+        default: false,
+        describe:
+          'License information from production dependencies will be excluded from the output.',
+        type: 'boolean'
+      })
+      .option('exclude-dev', {
+        default: false,
+        describe:
+          'License information from development dependencies will be excluded from the output.',
+        type: 'boolean'
+      })
       .parseSync();
 
     main({
       projectDirectory: argv.directory,
       outputPath: argv.outputPath,
-      filename: argv.filename
+      filename: argv.filename,
+      excludeProd: argv.excludeProd,
+      excludeDev: argv.excludeDev
     });
   })
   .help().argv;

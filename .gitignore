@@ -135,3 +135,6 @@ output.*
 
 # TypeScript build output
 build
+
+# Test directory for local package installation
+test

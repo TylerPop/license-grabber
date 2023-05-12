@@ -69,6 +69,7 @@ function main({
 yargs
   .scriptName('license-grabber')
   .usage('$0 [directory] <options>')
+  .wrap(Math.min(100, yargs.terminalWidth()))
   .command('$0 [directory]', '', (yargs) => {
     const argv = yargs
       .positional('directory', {
@@ -135,6 +136,6 @@ yargs
       skipRegistry: argv.skipRegistry
     };
 
-    main(options);
+    if (!argv.help) main(options);
   })
   .help().argv;

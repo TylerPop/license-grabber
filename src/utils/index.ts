@@ -69,8 +69,14 @@ export function getLicenseFromNodeModules(packagePath: string): LicenseInfo | nu
   const packageJsonBuffer = fs.readFileSync(path.join(packagePath, 'package.json'));
   const packageJson = JSON.parse(packageJsonBuffer.toString());
 
+  let licenseName = packageJson.license;
+
+  if (!licenseName || typeof licenseName !== 'string') {
+    licenseName = 'Unknown';
+  }
+
   const info = {
-    name: packageJson.license ?? 'Unknown',
+    name: licenseName,
     description: licenseDescriptionBuffer.toString().trim()
   };
 

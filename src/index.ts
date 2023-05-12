@@ -69,64 +69,85 @@ function main({
 yargs
   .scriptName('license-grabber')
   .usage('$0 [directory] <options>')
+  .wrap(Math.min(105, yargs.terminalWidth()))
   .command('$0 [directory]', '', (yargs) => {
     const argv = yargs
       .positional('directory', {
         default: '.',
-        describe: 'The root directory of the Node.js project.',
-        type: 'string'
+        describe: 'The root directory of the project.',
+        type: 'string',
+        nargs: 1,
+        normalize: true
       })
       .option('type', {
+        alias: ['t'],
         default: 'json',
         describe: 'The type of output file that is generated.',
-        type: 'string',
-        choices: ['json', 'txt', 'markdown', 'html']
+        choices: ['json', 'txt', 'markdown', 'html'],
+        nargs: 1
       })
       .option('output-path', {
+        alias: ['o'],
         default: '.',
-        describe: 'The directory where the output file(s) will be created.',
-        type: 'string'
+        describe: 'The directory where the output file(s) will be generated.',
+        type: 'string',
+        nargs: 1,
+        normalize: true
       })
-      .option('filename', {
+      .option('name', {
+        alias: ['n'],
         default: 'license_info',
-        describe: 'The name of the output file/directory created.',
-        type: 'string'
+        describe: 'The name of the output file.',
+        type: 'string',
+        nargs: 1
       })
       .option('exclude-prod', {
+        alias: ['P'],
         default: false,
-        describe:
-          'License information from production dependencies will be excluded from the output.',
-        type: 'boolean'
+        describe: 'Exclude licenses from production dependencies.',
+        type: 'boolean',
+        nargs: 0
       })
       .option('exclude-dev', {
+        alias: ['D'],
         default: false,
-        describe:
-          'License information from development dependencies will be excluded from the output.',
-        type: 'boolean'
+        describe: 'Exclude licenses from development dependencies.',
+        type: 'boolean',
+        nargs: 0
       })
       .option('skip-node-modules', {
+        alias: ['N'],
         default: false,
-        describe: 'Skips checking node_modules folder for license information.',
-        type: 'boolean'
+        describe: 'Skips checking the node_modules folder.',
+        type: 'boolean',
+        nargs: 0
       })
       .option('skip-registry', {
+        alias: ['R'],
         default: false,
-        describe: 'Skips checking the NPM registry for license information.',
-        type: 'boolean'
+        describe: 'Skips checking the NPM registry.',
+        type: 'boolean',
+        nargs: 0
       })
+      .example([
+        ['$0 -t html -n licenses', 'Create an HTML output file and give it a custom name.'],
+        ['$0 -o ./documents -D', 'Choose a custom output path and exclude dev dependencies.']
+      ])
       .parseSync();
 
     const options = {
       projectDirectory: argv.directory,
       type: argv.type,
       outputPath: argv.outputPath,
-      filename: argv.filename,
+      filename: argv.name,
       excludeProd: argv.excludeProd,
       excludeDev: argv.excludeDev,
       skipNodeModules: argv.skipNodeModules,
       skipRegistry: argv.skipRegistry
     };
 
-    main(options);
+    if (!argv.help) main(options);
   })
-  .help().argv;
+  .help()
+  .alias('help', ['h'])
+  .alias('version', ['v']).argv;

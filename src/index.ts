@@ -69,7 +69,7 @@ function main({
 yargs
   .scriptName('license-grabber')
   .usage('$0 [directory] <options>')
-  .wrap(Math.min(100, yargs.terminalWidth()))
+  .wrap(Math.min(105, yargs.terminalWidth()))
   .command('$0 [directory]', '', (yargs) => {
     const argv = yargs
       .positional('directory', {
@@ -80,6 +80,7 @@ yargs
         normalize: true
       })
       .option('type', {
+        alias: ['t'],
         default: 'json',
         describe: 'The type of output file that is generated.',
         type: 'string',
@@ -87,37 +88,43 @@ yargs
         nargs: 1
       })
       .option('output-path', {
+        alias: ['o'],
         default: '.',
         describe: 'The directory where the output file(s) will be generated.',
         type: 'string',
         nargs: 1,
         normalize: true
       })
-      .option('output-name', {
+      .option('name', {
+        alias: ['n'],
         default: 'license_info',
         describe: 'The name of the output file.',
         type: 'string',
         nargs: 1
       })
       .option('exclude-prod', {
+        alias: ['P'],
         default: false,
-        describe: 'Excludes licenses from production dependencies.',
+        describe: 'Exclude licenses from production dependencies.',
         type: 'boolean',
         nargs: 0
       })
       .option('exclude-dev', {
+        alias: ['D'],
         default: false,
-        describe: 'Excludes licenses from development dependencies.',
+        describe: 'Exclude licenses from development dependencies.',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-node-modules', {
+        alias: ['N'],
         default: false,
         describe: 'Skips checking the node_modules folder.',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-registry', {
+        alias: ['R'],
         default: false,
         describe: 'Skips checking the NPM registry.',
         type: 'boolean',
@@ -129,7 +136,7 @@ yargs
       projectDirectory: argv.directory,
       type: argv.type,
       outputPath: argv.outputPath,
-      filename: argv.outputName,
+      filename: argv.name,
       excludeProd: argv.excludeProd,
       excludeDev: argv.excludeDev,
       skipNodeModules: argv.skipNodeModules,
@@ -138,4 +145,6 @@ yargs
 
     if (!argv.help) main(options);
   })
-  .help().argv;
+  .help()
+  .alias('help', ['h'])
+  .alias('version', ['v']).argv;

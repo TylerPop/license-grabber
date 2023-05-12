@@ -83,7 +83,6 @@ yargs
         alias: ['t'],
         default: 'json',
         describe: 'The type of output file that is generated.',
-        type: 'string',
         choices: ['json', 'txt', 'markdown', 'html'],
         nargs: 1
       })
@@ -130,6 +129,10 @@ yargs
         type: 'boolean',
         nargs: 0
       })
+      .example([
+        ['$0 -t html -n licenses', 'Create an HTML output file and give it a custom name.'],
+        ['$0 -o ./documents -D', 'Choose a custom output path and exclude dev dependencies.']
+      ])
       .parseSync();
 
     const options = {

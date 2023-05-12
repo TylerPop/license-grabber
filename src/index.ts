@@ -73,46 +73,56 @@ yargs
     const argv = yargs
       .positional('directory', {
         default: '.',
-        describe: 'The root directory of the Node.js project.',
-        type: 'string'
+        describe: 'The root directory of the project.',
+        type: 'string',
+        nargs: 1,
+        normalize: true
       })
       .option('type', {
         default: 'json',
         describe: 'The type of output file that is generated.',
         type: 'string',
-        choices: ['json', 'txt', 'markdown', 'html']
+        choices: ['json', 'txt', 'markdown', 'html'],
+        nargs: 1
       })
       .option('output-path', {
         default: '.',
         describe: 'The directory where the output file(s) will be created.',
-        type: 'string'
+        type: 'string',
+        nargs: 1,
+        normalize: true
       })
-      .option('filename', {
+      .option('output-name', {
         default: 'license_info',
-        describe: 'The name of the output file/directory created.',
-        type: 'string'
+        describe: 'The name of the output file/directory that is generated.',
+        type: 'string',
+        nargs: 1
       })
       .option('exclude-prod', {
         default: false,
         describe:
           'License information from production dependencies will be excluded from the output.',
-        type: 'boolean'
+        type: 'boolean',
+        nargs: 0
       })
       .option('exclude-dev', {
         default: false,
         describe:
           'License information from development dependencies will be excluded from the output.',
-        type: 'boolean'
+        type: 'boolean',
+        nargs: 0
       })
       .option('skip-node-modules', {
         default: false,
         describe: 'Skips checking node_modules folder for license information.',
-        type: 'boolean'
+        type: 'boolean',
+        nargs: 0
       })
       .option('skip-registry', {
         default: false,
         describe: 'Skips checking the NPM registry for license information.',
-        type: 'boolean'
+        type: 'boolean',
+        nargs: 0
       })
       .parseSync();
 
@@ -120,7 +130,7 @@ yargs
       projectDirectory: argv.directory,
       type: argv.type,
       outputPath: argv.outputPath,
-      filename: argv.filename,
+      filename: argv.outputName,
       excludeProd: argv.excludeProd,
       excludeDev: argv.excludeDev,
       skipNodeModules: argv.skipNodeModules,

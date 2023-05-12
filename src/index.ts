@@ -87,40 +87,38 @@ yargs
       })
       .option('output-path', {
         default: '.',
-        describe: 'The directory where the output file(s) will be created.',
+        describe: 'The directory where the output file(s) will be generated.',
         type: 'string',
         nargs: 1,
         normalize: true
       })
       .option('output-name', {
         default: 'license_info',
-        describe: 'The name of the output file/directory that is generated.',
+        describe: 'The name of the output file.',
         type: 'string',
         nargs: 1
       })
       .option('exclude-prod', {
         default: false,
-        describe:
-          'License information from production dependencies will be excluded from the output.',
+        describe: 'Excludes licenses from production dependencies.',
         type: 'boolean',
         nargs: 0
       })
       .option('exclude-dev', {
         default: false,
-        describe:
-          'License information from development dependencies will be excluded from the output.',
+        describe: 'Excludes licenses from development dependencies.',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-node-modules', {
         default: false,
-        describe: 'Skips checking node_modules folder for license information.',
+        describe: 'Skips checking the node_modules folder.',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-registry', {
         default: false,
-        describe: 'Skips checking the NPM registry for license information.',
+        describe: 'Skips checking the NPM registry.',
         type: 'boolean',
         nargs: 0
       })

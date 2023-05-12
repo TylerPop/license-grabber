@@ -74,7 +74,7 @@ yargs
     const argv = yargs
       .positional('directory', {
         default: '.',
-        describe: 'The root directory of the project.',
+        describe: 'The root directory of the project',
         type: 'string',
         nargs: 1,
         normalize: true
@@ -82,14 +82,14 @@ yargs
       .option('type', {
         alias: ['t'],
         default: 'json',
-        describe: 'The type of output file that is generated.',
+        describe: 'The type of output file that is generated',
         choices: ['json', 'txt', 'markdown', 'html'],
         nargs: 1
       })
       .option('output-path', {
         alias: ['o'],
         default: '.',
-        describe: 'The directory where the output file(s) will be generated.',
+        describe: 'The directory where the output file(s) will be generated',
         type: 'string',
         nargs: 1,
         normalize: true
@@ -97,41 +97,41 @@ yargs
       .option('name', {
         alias: ['n'],
         default: 'license_info',
-        describe: 'The name of the output file.',
+        describe: 'The name of the output file',
         type: 'string',
         nargs: 1
       })
       .option('exclude-prod', {
         alias: ['P'],
         default: false,
-        describe: 'Exclude licenses from production dependencies.',
+        describe: 'Exclude licenses from production dependencies',
         type: 'boolean',
         nargs: 0
       })
       .option('exclude-dev', {
         alias: ['D'],
         default: false,
-        describe: 'Exclude licenses from development dependencies.',
+        describe: 'Exclude licenses from development dependencies',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-node-modules', {
         alias: ['N'],
         default: false,
-        describe: 'Skips checking the node_modules folder.',
+        describe: 'Skips checking the node_modules folder',
         type: 'boolean',
         nargs: 0
       })
       .option('skip-registry', {
         alias: ['R'],
         default: false,
-        describe: 'Skips checking the NPM registry.',
+        describe: 'Skips checking the NPM registry',
         type: 'boolean',
         nargs: 0
       })
       .example([
-        ['$0 -t html -n licenses', 'Create an HTML output file and give it a custom name.'],
-        ['$0 -o ./documents -D', 'Choose a custom output path and exclude dev dependencies.']
+        ['$0 -t html -n licenses', 'Create an HTML output file and give it a custom name'],
+        ['$0 -o ./documents -D', 'Choose a custom output path and exclude dev dependencies']
       ])
       .parseSync();
 

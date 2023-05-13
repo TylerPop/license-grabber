@@ -28,7 +28,9 @@
     "licence",
     "collector",
     "dependency",
-    "generator"
+    "generator",
+    "checker",
+    "dependencies"
   ],
   "author": "Tyler Poplawski",
   "license": "MIT",

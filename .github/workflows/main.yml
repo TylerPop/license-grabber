@@ -26,6 +26,5 @@ jobs:
         uses: anothrNick/github-tag-action@1.64.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_TAG: ${{ steps.package-version.outputs.current-version}}
-          WITH_V: true
+          CUSTOM_TAG: 'v${{ steps.package-version.outputs.current-version}}'
           VERBOSE: true

@@ -29,4 +29,3 @@ jobs:
           CUSTOM_TAG: ${{ steps.package-version.outputs.current-version}}
           WITH_V: true
           VERBOSE: true
-          DRY_RUN: true

@@ -1,5 +1,9 @@
 # License Grabber
 
+![Version](https://img.shields.io/badge/version-1.0.0-neongreen.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/TylerPop/license-grabber/blob/main/LICENSE)
+[![NPM](https://img.shields.io/npm/v/license-grabber)](https://www.npmjs.com/package/license-grabber)
+
 A command line utility for quickly collecting the license information from dependencies in a Node.js project. This tool was made with the purpose of easily being able to view, display and use your dependencies' licenses. It offers a number of different ways to format the license info, including JSON, plain text files, Markdown and HTML. There are [examples](https://github.com/TylerPop/license-grabber/tree/main/examples) in this repository of each of the output types.
 
 ## Installation
